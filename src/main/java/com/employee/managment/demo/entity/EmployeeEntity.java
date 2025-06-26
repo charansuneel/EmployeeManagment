@@ -47,5 +47,8 @@ public class EmployeeEntity {
     @NotNull
     @Column(name = "designation", nullable = false, length = 10)
     private Designation designation;
+
+    @Column(name = "manager_id")
+    private  int managerId;
 }
 

@@ -4,8 +4,10 @@ import com.employee.managment.demo.EmployeeDto;
 import com.employee.managment.demo.EmployeeSummary;
 import com.employee.managment.demo.entity.EmployeeEntity;
 import com.employee.managment.demo.repository.EmployeeRepository;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springdoc.api.OpenApiResourceNotFoundException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Service;
@@ -27,19 +29,28 @@ public class EmployeeService {
     return employeeRepository.findAll();
     }
 
-    public EmployeeDto getEmployees(Long id){
+    public EmployeeEntity getEmployees(Long id){
 
-        return employeeRepository.getEmployeesdetails(id).orElseThrow();
+        return employeeRepository.findByEmployeeId(id).orElseThrow(()  -> new OpenApiResourceNotFoundException("Employee not found with id: " + id));
     }
 
-    public EmployeeSummary getEmployeeSummary(Long id){
-
-        return employeeRepository.findByEmployeeId(id).orElseThrow();
-    }
+//    public EmployeeSummary getEmployeeSummary(Long id){
+//
+//        return employeeRepository.findByEmployeeId(id).orElseThrow();
+//    }
     public EmployeeEntity insertEmployees(EmployeeEntity employeeEntity){
 
         return employeeRepository.save(employeeEntity);
     }
 
+    @Transactional
+    public void deleteEmployee(Long id){
+        employeeRepository.deleteByEmployeeId(id);
+    }
+
+    @Transactional
+    public int assignManager(Long id, int managerId){
+        return  employeeRepository.updateManager(id, managerId);
+    }
 
 }
