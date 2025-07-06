@@ -9,6 +9,8 @@ import org.springframework.data.mongodb.core.index.GeoSpatialIndexType;
 import org.springframework.data.mongodb.core.index.GeoSpatialIndexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.List;
+
 @Data
 @Document(collection = "EmployeePersonalData")
 public class MEmployeeEntity {
@@ -25,4 +27,6 @@ public class MEmployeeEntity {
 
     @GeoSpatialIndexed(type = GeoSpatialIndexType.GEO_2DSPHERE)
     private Point location;
+
+    private List<String> metroStations;
 }

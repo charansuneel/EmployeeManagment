@@ -4,6 +4,8 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Pattern;
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 public class MEmployeeDTO {
     private String id;
@@ -17,4 +19,6 @@ public class MEmployeeDTO {
     private String email;
 
     private LocationDTO location;
+
+    private List<String> metroStations;
 }

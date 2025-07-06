@@ -5,12 +5,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.geo.Point;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -34,9 +32,30 @@ public class MEmployeeController {
         entity.setPhoneNumber(employee.getPhoneNumber());
         entity.setEmail(employee.getEmail());
         entity.setLocation(locationData);
+        entity.setMetroStations(employee.getMetroStations());
         MEmployeeEntity data = mEmployeeService.saveEmployee(entity);
         Map<String, Object> response = new HashMap<>();
         response.put("statusCode", HttpStatus.OK.value());
         return ResponseEntity.ok(response);
     }
+
+    @GetMapping("/fetchNearByRides")
+    ResponseEntity<Map>fetchEmployees(@RequestParam double distance, @RequestParam double x, @RequestParam double y){
+        Map<String, Object> response = new HashMap<>();
+        FetchDTO dto = new FetchDTO();
+        dto.setDistance(distance);
+
+        LocationDTO location = new LocationDTO();
+        location.setX(x);
+        location.setY(y);
+        dto.setLocation(location);
+
+        List<MEmployeeEntity> employeeData = mEmployeeService.findNearByRiders(dto);
+
+        response.put("statusCode", HttpStatus.OK.value());
+        response.put("data", employeeData);
+        return ResponseEntity.ok(response);
+    }
+
+
 }
