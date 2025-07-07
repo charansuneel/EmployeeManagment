@@ -22,8 +22,12 @@ public class MEmployeeService {
 
     public List<MEmployeeEntity> findNearByRiders(FetchDTO data){
         Distance distance = new Distance(data.getDistance(), Metrics.KILOMETERS);
-        Point point = new Point(data.getLocation().getX(), data.location.getY());
+        Point point = new Point(data.location.getX(), data.location.getY());
 
         return mEmployeeRepository.findByLocationNear(point, distance);
+    }
+
+    public List<MEmployeeEntity> findByMetroStations(List<String>stations){
+        return mEmployeeRepository.findByMetroStationsIn(stations);
     }
 }

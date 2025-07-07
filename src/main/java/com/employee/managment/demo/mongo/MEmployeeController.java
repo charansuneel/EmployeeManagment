@@ -57,5 +57,13 @@ public class MEmployeeController {
         return ResponseEntity.ok(response);
     }
 
+    @GetMapping("fetchByMetro")
+    ResponseEntity<Map>fetchByMetro(@RequestParam List<String>stations){
+        Map<String, Object> response = new HashMap<>();
+        List<MEmployeeEntity> data = mEmployeeService.findByMetroStations(stations);
+        response.put("statusCode", HttpStatus.OK.value());
+        response.put("data", data);
+        return ResponseEntity.ok(response);
+    }
 
 }

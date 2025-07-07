@@ -13,4 +13,6 @@ public interface MEmployeeRepository extends MongoRepository<MEmployeeEntity, St
     Double METERS_PER_MILE = 1609.34;
 
     List<MEmployeeEntity> findByLocationNear(Point point, Distance distance);
+    List<MEmployeeEntity> findByMetroStationsIn(List<String> stations);
+
 }
