@@ -2,6 +2,7 @@ package com.employee.managment.demo;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import redis.clients.jedis.Jedis;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.mongodb.config.EnableMongoAuditing;
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
@@ -25,6 +26,11 @@ public class DemoApplication {
 						.allowCredentials(true);
 			}
 		};
+	}
+
+	@Bean
+	public Jedis configureJedis(){
+		return new Jedis("127.0.0.1", 6379);
 	}
 
 	public static void main(String[] args) {

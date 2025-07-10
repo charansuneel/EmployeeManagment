@@ -6,10 +6,12 @@ import org.springframework.data.geo.Point;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import redis.clients.jedis.Jedis;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 @RestController
 @Slf4j
@@ -18,6 +20,8 @@ public class MEmployeeController {
 
     @Autowired
     MEmployeeService mEmployeeService;
+    @Autowired
+    Jedis redisClient;
 
     @PostMapping("/insertEmployee")
     ResponseEntity<Map>saveEmployee(@RequestBody MEmployeeDTO employee){
@@ -66,4 +70,21 @@ public class MEmployeeController {
         return ResponseEntity.ok(response);
     }
 
+    @GetMapping("/create-session")
+    ResponseEntity<Map>sessionCreation(){
+        Map<String, Object> response = new HashMap<>();
+        try{
+            UUID uuid = UUID.randomUUID();
+            redisClient.setex(uuid.toString(), 60, "ACTIVE");
+            response.put("statusCode", HttpStatus.OK.value());
+            response.put("sessionId", uuid.toString());
+            response.put("message", "Session created successfully");
+            return ResponseEntity.ok(response);}
+        catch(Exception e){
+            response.put("statusCode", HttpStatus.INTERNAL_SERVER_ERROR.value());
+            response.put("error", "Failed to create session");
+            response.put("details", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+    }
 }
