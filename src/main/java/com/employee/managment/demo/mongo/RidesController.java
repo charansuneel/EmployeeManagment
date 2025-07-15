@@ -1,18 +1,21 @@
 package com.employee.managment.demo.mongo;
 
+import com.employee.managment.demo.ResponseUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.ByteArrayOutputStream;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 @RestController
 @Slf4j
@@ -37,13 +40,47 @@ public class RidesController {
             rideObject.setDescription(data.getDescription());
             rideObject.setCapacity(data.getCapacity());
             RidesEntity createdRide = ridesService.createRide(rideObject);
-           response.put("data", createdRide);
+            response.put("data", createdRide);
             response.put("statusCode", HttpStatus.OK.value());
             return ResponseEntity.ok(response);
         }catch(Exception e){
             log.error("Error while creating ride", e);
             response.put("statusCode", HttpStatus.BAD_REQUEST.value());
             return ResponseEntity.badRequest().body(response);
+        }
+    }
+
+    @GetMapping("/get-rides")
+    ResponseEntity<Object> getRides(){
+        try {
+            List<RidesEntity> data = ridesService.fetchAllRides();
+            return ResponseUtil.genericSuccessResponseEntity(data, "Rides Fetched Successfully");
+        }catch(Exception e){
+            return ResponseUtil.genericErrorResponseEntity(Collections.EMPTY_LIST, "Error while Fetching Ride Details");
+        }
+    }
+
+    @PostMapping("/register-ride")
+    ResponseEntity<byte[]> registerRide(){
+        try(ByteArrayOutputStream out = new ByteArrayOutputStream()){
+            Workbook workbook = new XSSFWorkbook();
+            Sheet sheet = workbook.createSheet("Trip Expenses");
+
+            Row header = sheet.createRow(0);
+            header.createCell(0).setCellValue("Name");
+            header.createCell(1).setCellValue("Amount");
+            header.createCell(2).setCellValue("Date");
+            header.createCell(3).setCellValue("Place");
+
+            workbook.write(out);
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+            headers.setContentDisposition(ContentDisposition.attachment().filename("rides.xlsx").build());
+
+            return new ResponseEntity<>(out.toByteArray(), headers, HttpStatus.OK);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 
