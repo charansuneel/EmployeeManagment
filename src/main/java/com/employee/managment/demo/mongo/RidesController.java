@@ -8,10 +8,7 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.ByteArrayOutputStream;
 import java.text.SimpleDateFormat;
@@ -61,8 +58,12 @@ public class RidesController {
     }
 
     @PostMapping("/register-ride")
-    ResponseEntity<byte[]> registerRide(){
-        try(ByteArrayOutputStream out = new ByteArrayOutputStream()){
+    public ResponseEntity<?> registerRide(@RequestParam String rideId, @RequestBody String phoneNumber) {
+        try {
+            ridesService.registerRide(rideId, phoneNumber);
+
+            // Create Excel in memory
+            ByteArrayOutputStream out = new ByteArrayOutputStream();
             Workbook workbook = new XSSFWorkbook();
             Sheet sheet = workbook.createSheet("Trip Expenses");
 
@@ -73,15 +74,16 @@ public class RidesController {
             header.createCell(3).setCellValue("Place");
 
             workbook.write(out);
+            workbook.close();
 
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
             headers.setContentDisposition(ContentDisposition.attachment().filename("rides.xlsx").build());
 
             return new ResponseEntity<>(out.toByteArray(), headers, HttpStatus.OK);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+
+        } catch (Exception ex) {
+            return ResponseUtil.genericErrorResponseEntity("Registration Failed", "Unexpected error: " + ex.getMessage());
         }
     }
-
 }
