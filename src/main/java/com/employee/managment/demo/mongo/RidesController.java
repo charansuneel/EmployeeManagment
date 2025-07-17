@@ -58,7 +58,7 @@ public class RidesController {
     }
 
     @PostMapping("/register-ride")
-    public ResponseEntity<?> registerRide(@RequestParam String rideId, @RequestBody String phoneNumber) {
+    public ResponseEntity<?> registerRide(@RequestParam String rideId, @RequestParam String phoneNumber) {
         try {
             ridesService.registerRide(rideId, phoneNumber);
 

@@ -6,6 +6,7 @@ import org.springdoc.api.OpenApiResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -30,8 +31,14 @@ public class RidesService {
     }
 
     public registrationsEntity registerRide(String id, String phoneNumber){
+
         MEmployeeEntity data = mEmployeeRepository.findByPhoneNumber(phoneNumber);
-        if(data != null){
+        List<rideIdonly> registeredData = ridesRepository.findByPhoneNo(phoneNumber);
+        List<String> registeredIds = new ArrayList<>();
+        for (rideIdonly p : registeredData) {
+            registeredIds.add(p.getRideId());
+        }
+        if(data != null && !registeredIds.contains(id)){
             try {
                 String employeeName = data.getName();
                 registrationsEntity regEntity = new registrationsEntity();
@@ -44,7 +51,10 @@ public class RidesService {
                 throw new OpenApiResourceNotFoundException("Failed to register ride: " + e.getMessage());
             }
         }else{
-            throw new OpenApiResourceNotFoundException("No user found with phone" + phoneNumber);
+            if(registeredIds.contains(id)){
+                throw new OpenApiResourceNotFoundException("User already registered for the ride" + phoneNumber);
+            }else{
+            throw new OpenApiResourceNotFoundException("No user found with phone" + phoneNumber);}
         }
     }
 }
