@@ -6,6 +6,6 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface registrationsRepository extends MongoRepository<registrationsEntity, String> {
-    List<rideIdonly> findByPhoneNo(String phoneNumber);
+public interface UserSessionRepository extends MongoRepository<UserSessionEntity, String> {
+
 }

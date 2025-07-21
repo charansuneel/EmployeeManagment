@@ -28,7 +28,7 @@ public class ResponseUtil {
                         "data", data,
                         "statusCode", HttpStatus.NOT_FOUND.value()
                 ),
-                HttpStatus.OK
+                HttpStatus.NOT_FOUND
         );
 
     }
