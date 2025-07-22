@@ -60,7 +60,7 @@ public class RidesController {
     @PostMapping("/register-ride")
     public ResponseEntity<?> registerRide(@RequestParam String rideId, @RequestParam String phoneNumber) {
         try {
-            ridesService.registerRide(rideId, phoneNumber);
+            UserSessionEntity sessionData = ridesService.registerRide(rideId, phoneNumber);
 
             // Create Excel in memory
             ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -80,7 +80,7 @@ public class RidesController {
             headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
             headers.setContentDisposition(ContentDisposition.attachment().filename("rides.xlsx").build());
 
-            return new ResponseEntity<>(out.toByteArray(), headers, HttpStatus.OK);
+            return new ResponseEntity<>(sessionData, HttpStatus.OK);
 
         } catch (Exception ex) {
             return ResponseUtil.genericErrorResponseEntity("Registration Failed", "Unexpected error: " + ex.getMessage());

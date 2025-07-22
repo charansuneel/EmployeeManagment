@@ -1,6 +1,7 @@
 package com.employee.managment.demo.mongo;
 
 
+import com.employee.managment.demo.TokenGenerator;
 import lombok.extern.slf4j.Slf4j;
 import org.springdoc.api.OpenApiResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,17 +57,19 @@ public class RidesService {
         }
         if(data != null && !registeredIds.contains(id)){
             try {
-                UUID uuid = UUID.randomUUID();
+//                UUID uuid = UUID.randomUUID();
                 String employeeName = data.getName();
                 String employeeId = data.getId();
-                UserSessionEntity userSession = new UserSessionEntity(uuid.toString(), employeeName, employeeId, zonedIST.toInstant());
+                String token = TokenGenerator.createToken(id, employeeId);
+                log.info(token,"GeneratedToken");
+                UserSessionEntity userSession = new UserSessionEntity(token, employeeName, employeeId, zonedIST.toInstant());
                 redisClient.zadd("ridesSession", score, employeeId+"+"+employeeName+"+"+score);
-                redisClient.setex(uuid.toString(), 60, "ACTIVE");
+                redisClient.setex(token, 60, "ACTIVE");
 //                registrationsEntity regEntity = new registrationsEntity();
 //                regEntity.setRideId(id);
 //                regEntity.setName(employeeName);
 //                regEntity.setPhoneNo(phoneNumber);
-//
+//                registrationsRepository.insert(regEntity);
                return sessionRepository.insert(userSession);
             } catch (Exception e) {
                 throw new OpenApiResourceNotFoundException("Failed to register ride: " + e.getMessage());
