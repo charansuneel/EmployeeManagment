@@ -13,6 +13,6 @@ public class RedisIntialise {
 
     @PostConstruct
     public void init() {
-       redisClient.setnx("COUNTER_KEY", "5");
+       redisClient.setnx("REGISTER_COUNT", "0");
     }
 }

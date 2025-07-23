@@ -60,7 +60,7 @@ public class RidesController {
     @PostMapping("/register-ride")
     public ResponseEntity<?> registerRide(@RequestParam String rideId, @RequestParam String phoneNumber) {
         try {
-            UserSessionEntity sessionData = ridesService.registerRide(rideId, phoneNumber);
+            UserSessionResponse sessionData = ridesService.createSession(rideId, phoneNumber);
 
             // Create Excel in memory
             ByteArrayOutputStream out = new ByteArrayOutputStream();
