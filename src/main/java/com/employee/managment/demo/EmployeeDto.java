@@ -8,11 +8,6 @@ import java.time.LocalDate;
 @Data
 @AllArgsConstructor
 public class EmployeeDto {
-
     private String firstName;
     private LocalDate dateOfBirth;
-
-
-
-
 }

@@ -9,6 +9,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
+import redis.clients.jedis.Jedis;
 
 import java.io.ByteArrayOutputStream;
 import java.text.SimpleDateFormat;
@@ -21,6 +22,9 @@ public class RidesController {
 
     @Autowired
     RidesService ridesService;
+
+    @Autowired
+    Jedis redisClient;
 
     @PostMapping("/create-ride")
     public ResponseEntity<Map> createRide(RideDTO data){
@@ -83,7 +87,9 @@ public class RidesController {
             return new ResponseEntity<>(sessionData, HttpStatus.OK);
 
         } catch (Exception ex) {
+            log.error(ex.getMessage());
             return ResponseUtil.genericErrorResponseEntity("Registration Failed", "Unexpected error: " + ex.getMessage());
         }
     }
+
 }
