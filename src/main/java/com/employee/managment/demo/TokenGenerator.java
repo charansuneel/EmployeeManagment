@@ -1,5 +1,6 @@
 package com.employee.managment.demo;
 
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
@@ -21,5 +22,15 @@ public class TokenGenerator {
                 .setExpiration(new Date(System.currentTimeMillis() + 3600000)) // 1 hour
                 .signWith(key)
                 .compact();
+    }
+
+    public static Claims decodeToken(String token) {
+        Claims decodedData = Jwts.parserBuilder()
+                .setSigningKey(key)  // same key used for signing
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+
+        return decodedData;
     }
 }

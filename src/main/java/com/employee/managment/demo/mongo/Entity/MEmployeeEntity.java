@@ -1,4 +1,4 @@
-package com.employee.managment.demo.mongo;
+package com.employee.managment.demo.mongo.Entity;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Pattern;

@@ -1,5 +1,7 @@
-package com.employee.managment.demo.mongo;
+package com.employee.managment.demo.mongo.Repository;
 
+import com.employee.managment.demo.mongo.Entity.RidesEntity;
+import com.employee.managment.demo.mongo.DTO.rideIdonly;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 import java.util.List;

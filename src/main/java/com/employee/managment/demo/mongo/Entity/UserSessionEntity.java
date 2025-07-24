@@ -1,10 +1,9 @@
-package com.employee.managment.demo.mongo;
+package com.employee.managment.demo.mongo.Entity;
 
 import lombok.Data;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.Instant;
-import java.time.LocalDateTime;
 
 @Document(collection="usersSessionEntity")
 @Data

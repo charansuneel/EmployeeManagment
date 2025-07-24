@@ -1,6 +1,11 @@
-package com.employee.managment.demo.mongo;
+package com.employee.managment.demo.mongo.Controller;
 
 import com.employee.managment.demo.ResponseUtil;
+import com.employee.managment.demo.mongo.DTO.RideDTO;
+import com.employee.managment.demo.mongo.Entity.RegisteredRides;
+import com.employee.managment.demo.mongo.Entity.RidesEntity;
+import com.employee.managment.demo.mongo.Service.RidesService;
+import com.employee.managment.demo.mongo.UserSessionResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -89,6 +94,16 @@ public class RidesController {
         } catch (Exception ex) {
             log.error(ex.getMessage());
             return ResponseUtil.genericErrorResponseEntity("Registration Failed", "Unexpected error: " + ex.getMessage());
+        }
+    }
+
+    @PostMapping("/submit-ride")
+    ResponseEntity<?>submitRegistration(@RequestBody String token){
+        try{
+            RegisteredRides data = ridesService.submit(token);
+            return new ResponseEntity<>(data, HttpStatus.OK);
+        }catch(Exception ex){
+            return ResponseUtil.genericErrorResponseEntity("Verification Failed", "Unexpected error: " + ex.getMessage());
         }
     }
 

@@ -1,8 +1,6 @@
-package com.employee.managment.demo.mongo;
+package com.employee.managment.demo.mongo.DTO;
 
 import lombok.Data;
-
-import java.util.Date;
 
 @Data
 public class RideDTO {
