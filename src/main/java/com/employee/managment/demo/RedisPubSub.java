@@ -26,6 +26,9 @@ public class RedisPubSub extends JedisPubSub {
             Claims claims = TokenGenerator.decodeToken(message);
             Map<String, Object> claimsMap = new HashMap<>(claims);
             List<RegisteredRides> rides = registeredRidesRepository.findBySessionIdAndRideId(message, (String) claimsMap.get("ride"));
+            for(RegisteredRides  x : rides){
+                System.out.println(x);
+            }
             log.info("Found rides with the session Token");
             System.out.println("Pattern: " + pattern + ", Channel: " + channel + ", Message: " + message + "Expire Event Triggered");
         }

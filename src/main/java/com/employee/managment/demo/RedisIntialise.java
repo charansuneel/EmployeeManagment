@@ -10,15 +10,21 @@ import redis.clients.jedis.Jedis;
 @Slf4j
 public class RedisIntialise {
 
+    private final RedisPubSub pubSub;
     @Autowired
     Jedis redisClient;
+
+    @Autowired
+    public RedisIntialise(RedisPubSub pubSub) {
+        this.pubSub = pubSub;
+    }
 
     @PostConstruct
     public void init() {
        redisClient.setnx("REGISTER_COUNT", "0");
         new Thread(() -> {
             try {
-                RedisPubSub pubSub = new RedisPubSub();
+                //RedisPubSub pubSub = new RedisPubSub();
                 log.info("Subscribing to Redis key events...");
                 Jedis pubSubClient = new Jedis("127.0.0.1", 6379);
                 pubSubClient.psubscribe(pubSub, "__keyevent@0__:*");

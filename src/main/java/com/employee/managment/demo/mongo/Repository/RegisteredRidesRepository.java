@@ -10,6 +10,6 @@ import java.util.List;
 @Repository
 public interface RegisteredRidesRepository extends MongoRepository<RegisteredRides, String> {
 
-    List<RegisteredRides> findBySessionIdAndRideId(String sessionId, String rideId);
+    public List<RegisteredRides> findBySessionIdAndRideId(String sessionId, String rideId);
 
 }
