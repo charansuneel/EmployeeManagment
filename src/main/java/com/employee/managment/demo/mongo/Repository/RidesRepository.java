@@ -9,4 +9,5 @@ import java.util.List;
 public interface RidesRepository extends MongoRepository<RidesEntity, String> {
 
     List<rideIdonly> findByPhoneNo(String phoneNumber);
+    List<RidesEntity> findDataByPhoneNo(String phoneNumber);
 }

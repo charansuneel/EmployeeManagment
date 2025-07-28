@@ -11,5 +11,5 @@ import java.util.List;
 public interface RegisteredRidesRepository extends MongoRepository<RegisteredRides, String> {
 
     public List<RegisteredRides> findBySessionIdAndRideId(String sessionId, String rideId);
-
+    public List<RegisteredRides> findByRideId(String rideId);
 }

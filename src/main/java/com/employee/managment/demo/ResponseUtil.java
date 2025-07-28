@@ -32,4 +32,17 @@ public class ResponseUtil {
         );
 
     }
+
+    public static ResponseEntity<Object> genericErrorResponseEntity(Object data, String message, Integer statusCode){
+        return new ResponseEntity<>(
+                Map.of(
+                        "status", "error",
+                        "message", message,
+                        "data", data,
+                        "statusCode", statusCode
+                ),
+                HttpStatus.valueOf(statusCode)
+        );
+
+    }
 }

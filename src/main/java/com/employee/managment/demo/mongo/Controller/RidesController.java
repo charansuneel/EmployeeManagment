@@ -107,4 +107,9 @@ public class RidesController {
         }
     }
 
+    @GetMapping("/fetch-data")
+    ResponseEntity<?>getMasterData(@RequestParam String phoneNumber){
+        return ridesService.fetchMasterData(phoneNumber);
+    }
+
 }

@@ -1,6 +1,7 @@
 package com.employee.managment.demo.mongo.Service;
 
 
+import com.employee.managment.demo.ResponseUtil;
 import com.employee.managment.demo.TokenGenerator;
 import com.employee.managment.demo.mongo.Entity.MEmployeeEntity;
 import com.employee.managment.demo.mongo.Entity.RegisteredRides;
@@ -18,6 +19,8 @@ import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;
 import org.springdoc.api.OpenApiResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import redis.clients.jedis.Jedis;
 
@@ -162,6 +165,26 @@ public class RidesService {
                 return new RegisteredRides();
         } catch (Exception e){
             throw new OpenApiResourceNotFoundException(e.getMessage());
+        }
+    }
+
+    public ResponseEntity<?> fetchMasterData(String phoneNumber){
+        MEmployeeEntity data = mEmployeeRepository.findByPhoneNumber(phoneNumber);
+        if(data != null){
+
+            List<RidesEntity>createdRides = ridesRepository.findDataByPhoneNo(phoneNumber);
+            List<rideIdonly>rideIds = ridesRepository.findByPhoneNo(phoneNumber);
+            Map<String, List<?>> Count = new HashMap<>();
+            for (rideIdonly p : rideIds) {
+                Count.put(p.getRideId(), registeredRidesRepository.findByRideId(p.getRideId()));
+            }
+
+            Map<String, Object> response = new HashMap<>();
+            response.put("created", createdRides);
+            response.put("count", Count);
+            return ResponseUtil.genericSuccessResponseEntity(response, "Data fetched Successfully");
+        }else{
+             return ResponseUtil.genericErrorResponseEntity("Unauthorized", "No rides created", HttpStatus.FORBIDDEN.value());
         }
     }
 }
