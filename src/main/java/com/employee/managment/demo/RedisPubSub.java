@@ -6,6 +6,7 @@ import io.jsonwebtoken.Claims;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPubSub;
 
 import java.util.HashMap;
@@ -19,6 +20,9 @@ public class RedisPubSub extends JedisPubSub {
     @Autowired
     RegisteredRidesRepository registeredRidesRepository;
 
+    @Autowired
+    Jedis redisClient;
+
     @Override
     public void onPMessage(String pattern, String channel, String message) {
 
@@ -26,8 +30,10 @@ public class RedisPubSub extends JedisPubSub {
             Claims claims = TokenGenerator.decodeToken(message);
             Map<String, Object> claimsMap = new HashMap<>(claims);
             List<RegisteredRides> rides = registeredRidesRepository.findBySessionIdAndRideId(message, (String) claimsMap.get("ride"));
-            for(RegisteredRides  x : rides){
-                System.out.println(x);
+            if(rides.size() > 0){
+
+            }else{
+                redisClient.decr((String) claimsMap.get("ride"));
             }
             log.info("Found rides with the session Token");
             System.out.println("Pattern: " + pattern + ", Channel: " + channel + ", Message: " + message + "Expire Event Triggered");

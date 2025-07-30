@@ -48,6 +48,7 @@ public class RidesController {
             RidesEntity createdRide = ridesService.createRide(rideObject);
             response.put("data", createdRide);
             response.put("statusCode", HttpStatus.OK.value());
+            redisClient.setnx(uuid.toString(),"0");
             return ResponseEntity.ok(response);
         }catch(Exception e){
             log.error("Error while creating ride", e);

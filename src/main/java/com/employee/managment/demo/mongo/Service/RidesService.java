@@ -116,6 +116,7 @@ public class RidesService {
 
         MEmployeeEntity data = mEmployeeRepository.findByPhoneNumber(phoneNumber);
         List<rideIdonly> registeredData = registrationsRepository.findByPhoneNo(phoneNumber);
+        List<RidesEntity> rideData = ridesRepository.findByRideId(rideId);
 
         List<String> registeredIds = new ArrayList<>();
         for (rideIdonly p : registeredData) {
@@ -126,15 +127,12 @@ public class RidesService {
             try {
                 String employeeName = data.getName();
                 String employeeId = data.getId();
-                String token = TokenGenerator.createToken(rideId, employeeId);
-                log.info(token, "GeneratedToken");
-                redisClient.zadd("ridesSession", score, employeeId + "+" + employeeName + "+" + score);
-                redisClient.setex(token, 60, "ACTIVE");
-                Long Counter = redisClient.incr("REGISTER_COUNT");
-                log.info(redisClient.get("REGISTER_COUNT"), "THIS IS THE VALUE OF THE COUNTER KEY");
-
-                UserSessionEntity userSession = new UserSessionEntity(token, employeeName, employeeId, zonedIST.toInstant());
-                if (Counter >= 5) {
+                if (Integer.parseInt(redisClient.get(rideId)) < rideData.get(0).getCapacity()) {
+                    String token = TokenGenerator.createToken(rideId, employeeId);
+                    redisClient.zadd("ridesSession", score, employeeId + "+" + employeeName + "+" + score);
+                    redisClient.setex(token, 60, "ACTIVE");
+                    UserSessionEntity userSession = new UserSessionEntity(token, employeeName, employeeId, zonedIST.toInstant());
+                    redisClient.incr(rideId);
                     sessionRepository.insert(userSession);
                     return new UserSessionResponse(false, token, employeeId, rideId);
                 } else {
