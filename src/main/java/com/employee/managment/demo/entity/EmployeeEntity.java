@@ -50,5 +50,7 @@ public class EmployeeEntity {
 
     @Column(name = "manager_id")
     private  int managerId;
+
+
 }
 
