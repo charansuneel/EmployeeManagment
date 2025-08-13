@@ -16,5 +16,4 @@ public interface MEmployeeRepository extends MongoRepository<MEmployeeEntity, St
     List<MEmployeeEntity> findByLocationNear(Point point, Distance distance);
     List<MEmployeeEntity> findByMetroStationsIn(List<String> stations);
     MEmployeeEntity findByPhoneNumber(String phoneNumber);
-
 }

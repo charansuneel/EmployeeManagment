@@ -2,6 +2,7 @@ package com.employee.managment.demo;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import redis.clients.jedis.Jedis;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.mongodb.config.EnableMongoAuditing;
@@ -11,6 +12,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @EnableMongoAuditing
 @EnableMongoRepositories("com.employee.managment.demo.mongo")
+@EnableScheduling
 @SpringBootApplication
 public class DemoApplication {
 

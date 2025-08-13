@@ -12,4 +12,5 @@ public interface RegisteredRidesRepository extends MongoRepository<RegisteredRid
 
     public List<RegisteredRides> findBySessionIdAndRideId(String sessionId, String rideId);
     public List<RegisteredRides> findByRideId(String rideId);
+    public List<RegisteredRides> findAll();
 }
